@@ -1,14 +1,11 @@
 <script>
 	import { createForm, Schema } from '$lib';
 
-	// Create Form Instance
 	const { values, formControl, isValid } = createForm({
-		// Initial Form Data
 		initialValues: {
 			email: '',
 			password: ''
 		},
-		// Form Validation using Yup Schema
 		validationSchema: Schema.object().shape({
 			email: Schema.string().email().required(),
 			password: Schema.string().min(6).required()
@@ -16,7 +13,6 @@
 	});
 
 	const onSubmit = () => {
-		// "$values" contains current Form Data
 		console.log($values);
 	};
 </script>
