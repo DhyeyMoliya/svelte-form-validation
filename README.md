@@ -16,7 +16,7 @@ npm install svelte-form-validation
 
 ## Basic Usage Example
 
-_[demo/Basic.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/master/demo/Basic.svelte)_ :
+_[src/routes/basic.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/master/src/routes/basic.svelte)_ :
 
 ```html
 <script>
@@ -99,14 +99,16 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
       title: Schema.string().min(8).required(),
       description: Schema.string(),
       coverImage: Schema.mixed().test(value => value?.length > 0), // Custom validation because yup does not suport file objects
-      users: Schema.array().of({
-        name: Schema.string().required(),
-        email: Schema.string().email().required(),
-        address: Schema.object().shape({
-          state: Schema.string().required(),
-          city: Schema.string(),
+      users: Schema.array().of(
+        Schema.object().shape({
+          name: Schema.string().required(),
+          email: Schema.string().email().required(),
+          address: Schema.object().shape({
+            state: Schema.string().required(),
+            city: Schema.string(),
+          }),
         }),
-      }),
+      )
     }),
     // CSS class validations
     css: {
@@ -190,6 +192,7 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
         accept="image/*"
         bind:files={$values.coverImage}
         use:formControl
+        type="file"
     />
     {#if $state.coverImage._errors?.length}
         {#each $state.coverImage._errors as error}
@@ -209,7 +212,7 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
     {#each $values.users as user, index}
         <h2>
             User {user.name}
-            <button type="button" on:click={removeUser(i)}>
+            <button type="button" on:click={removeUser(index)}>
                 Remove User
             </button>
         </h2>
@@ -239,7 +242,7 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
         {/if}
 
         <!-- Using with Components -->
-        <UserAddressForm {form} {state} {formControl} {index} />
+        <UserAddressForm {values} {state} {formControl} {index} />
 
     {/each}
 
@@ -276,35 +279,43 @@ _[demo/UserAddressForm.svelte](https://github.com/DhyeyMoliya/svelte-form-valida
 
 ```html
 <script lang="ts">
-	export let form: any;
+	export let values: any;
 	export let state: any;
 	export let formControl;
 	export let index: number;
 </script>
 
-<input
-	type="text"
-	placeholder="State"
-	bind:value="{$values.users[index].address.state}"
-	name="users[{index}].address.state"
-	use:formControl
-/>
-{#if $state.users[index].address.state._errors?.length} {#each
-$state.users[index].address.state._errors as error}
-<span class="error">{error}</span>
-{/each} {/if}
+<div>
+	<input
+		type="text"
+		placeholder="State"
+		bind:value="{$values.users[index].address.state}"
+		name="users[{index}].address.state"
+		use:formControl
+	/>
+	{#if $state.users[index].address.state._errors?.length}
+	<div>
+		{#each $state.users[index].address.state._errors as error}
+		<span class="error">{error}</span>
+		{/each}
+	</div>
+	{/if}
 
-<input
-	type="text"
-	placeholder="City"
-	bind:value="{$values.users[index].address.city}"
-	name="users[{index}].address.city"
-	use:formControl
-/>
-{#if $state.users[index].address.city._errors?.length} {#each
-$state.users[index].address.city._errors as error}
-<span class="error">{error}</span>
-{/each} {/if}
+	<input
+		type="text"
+		placeholder="City"
+		bind:value="{$values.users[index].address.city}"
+		name="users[{index}].address.city"
+		use:formControl
+	/>
+	{#if $state.users[index].address.city._errors?.length}
+	<div>
+		{#each $state.users[index].address.city._errors as error}
+		<span class="error">{error}</span>
+		{/each}
+	</div>
+	{/if}
+</div>
 ```
 
 ## 🤝 Contributing
