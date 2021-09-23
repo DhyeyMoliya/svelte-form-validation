@@ -353,5 +353,3 @@ export function createForm<Data>({ initialValues, validationSchema, css: cssConf
         resetForm
     };
 }
-
-export * as Schema from 'yup';

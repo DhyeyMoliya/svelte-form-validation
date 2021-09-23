@@ -1,14 +1,15 @@
 <script>
-	import { createForm, Schema } from '$lib';
+	import { createForm } from '$lib';
+	import * as yup from 'yup';
 
 	const { values, formControl, isValid } = createForm({
 		initialValues: {
 			email: '',
 			password: ''
 		},
-		validationSchema: Schema.object().shape({
-			email: Schema.string().email().required(),
-			password: Schema.string().min(6).required()
+		validationSchema: yup.object().shape({
+			email: yup.string().email().required(),
+			password: yup.string().min(6).required()
 		})
 	});
 

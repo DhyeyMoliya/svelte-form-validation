@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { createForm, Schema } from '$lib';
+	import { createForm } from '$lib';
+	import * as yup from 'yup';
 	import UserAddressForm from './_UserAddressForm.svelte'; // Components
 
 	// (Optional) Form's Data type will be automatically inferred from "initialValues" in "createForm" if type of Data is not specified
@@ -38,20 +39,20 @@
 			users: [] // Complex Form Array
 		},
 		// Validation Schema (Yup - https://github.com/jquense/yup)
-		validationSchema: Schema.object().shape({
-			title: Schema.string().min(8).required(),
-			description: Schema.string(),
-			coverImage: Schema.mixed().test({
+		validationSchema: yup.object().shape({
+			title: yup.string().min(8).required(),
+			description: yup.string(),
+			coverImage: yup.mixed().test({
 				message: '${path} is required',
 				test: (value) => value?.length > 0 // Custom validation because yup does not suport file objects
 			}),
-			users: Schema.array().of(
-				Schema.object().shape({
-					name: Schema.string().required(),
-					email: Schema.string().email().required(),
-					address: Schema.object().shape({
-						state: Schema.string().required(),
-						city: Schema.string()
+			users: yup.array().of(
+				yup.object().shape({
+					name: yup.string().required(),
+					email: yup.string().email().required(),
+					address: yup.object().shape({
+						state: yup.string().required(),
+						city: yup.string()
 					})
 				})
 			)

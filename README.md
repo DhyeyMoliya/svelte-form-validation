@@ -20,7 +20,8 @@ _[src/routes/basic.svelte](https://github.com/DhyeyMoliya/svelte-form-validation
 
 ```html
 <script>
-	import { createForm, Schema } from 'svelte-form-validation';
+	import { createForm } from 'svelte-form-validation';
+	import * as yup from 'yup';
 
 	// Create Form Instance
 	const { values, formControl, isValid } = createForm({
@@ -29,10 +30,10 @@ _[src/routes/basic.svelte](https://github.com/DhyeyMoliya/svelte-form-validation
 			email: '',
 			password: ''
 		},
-		// Form Validation using Yup Schema
-		validationSchema: Schema.object().shape({
-			email: Schema.string().email().required(),
-			password: Schema.string().min(6).required()
+		// Form Validation using Yup
+		validationSchema: yup.object().shape({
+			email: yup.string().email().required(),
+			password: yup.string().min(6).required()
 		})
 	});
 
@@ -56,7 +57,8 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
 
 ```html
 <script lang="ts">
-  import { createForm, Schema } from "svelte-form-validation";
+  import { createForm } from "svelte-form-validation";
+  import * as yup from 'yup';
   import UserAddressForm from "./UserAddressForm.svelte"; // Components
 
   // (Optional) Form's Data type will be automatically inferred from "initialValues" in "createForm" if type of Data is not specified
@@ -95,17 +97,17 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
       users: [], // Complex Form Array
     },
     // Validation Schema (Yup - https://github.com/jquense/yup)
-    validationSchema: Schema.object().shape({
-      title: Schema.string().min(8).required(),
-      description: Schema.string(),
-      coverImage: Schema.mixed().test(value => value?.length > 0), // Custom validation because yup does not suport file objects
-      users: Schema.array().of(
-        Schema.object().shape({
-          name: Schema.string().required(),
-          email: Schema.string().email().required(),
-          address: Schema.object().shape({
-            state: Schema.string().required(),
-            city: Schema.string(),
+    validationSchema: yup.object().shape({
+      title: yup.string().min(8).required(),
+      description: yup.string(),
+      coverImage: yup.mixed().test(value => value?.length > 0), // Custom validation because yup does not suport file objects
+      users: yup.array().of(
+        yup.object().shape({
+          name: yup.string().required(),
+          email: yup.string().email().required(),
+          address: yup.object().shape({
+            state: yup.string().required(),
+            city: yup.string(),
           }),
         }),
       )
