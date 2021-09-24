@@ -3,7 +3,7 @@
 	import * as yup from 'yup';
 	import UserAddressForm from './_UserAddressForm.svelte'; // Components
 
-	// (Optional) Form's Data type will be automatically inferred from "initialValues" in "createForm" if type of Data is not specified
+	// (Optional) Form's Data type will be automatically inferred from "values" in "createForm" if type of Data is not specified
 	type FormData = {
 		title: string;
 		description: string;
@@ -32,7 +32,7 @@
 		resetForm // Reset the Form with optional new value and clear validation
 	} = createForm<FormData>({
 		// Initial Values of Form
-		initialValues: {
+		values: {
 			title: '', // Simple String
 			description: '', // Simple String
 			coverImage: '', // File Input

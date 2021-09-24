@@ -26,7 +26,7 @@ _[src/routes/basic.svelte](https://github.com/DhyeyMoliya/svelte-form-validation
 	// Create Form Instance
 	const { values, formControl, isValid } = createForm({
 		// Initial Form Data
-		initialValues: {
+		values: {
 			email: '',
 			password: ''
 		},
@@ -61,7 +61,7 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
   import * as yup from 'yup';
   import UserAddressForm from "./UserAddressForm.svelte"; // Components
 
-  // (Optional) Form's Data type will be automatically inferred from "initialValues" in "createForm" if type of Data is not specified
+  // (Optional) Form's Data type will be automatically inferred from "values" in "createForm" if type of Data is not specified
   type FormData = {
     title: string,
     description: string,
@@ -90,7 +90,7 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
     resetForm, // Reset the Form with optional new value and clear validation
   } = createForm<FormData>({
     // Initial Values of Form
-    initialValues: {
+    values: {
       title: "", // Simple String
       description: "", // Simple String
       coverImage: "", // File Input

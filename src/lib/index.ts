@@ -11,7 +11,7 @@ type FormState = {
 };
 
 type FormConfigInput<Data = any> = {
-    initialValues: Data,
+    values: Data,
     validationSchema?: ObjectSchema<any>,
     css?: {
         enabled?: boolean,
@@ -32,11 +32,11 @@ function isEmpty(object) {
     return isNullish(object) || Object.keys(object).length <= 0;
 }
 
-const createState = (initialValues: any, state: Writable<FormState>, validationSchema: ObjectSchema<any>) => {
+const createState = (values: any, state: Writable<FormState>, validationSchema: ObjectSchema<any>) => {
     if (validationSchema) {
-        state.set(createValidatedState(initialValues, validationSchema.fields));
+        state.set(createValidatedState(values, validationSchema.fields));
     } else {
-        state.set(createRawState(initialValues));
+        state.set(createRawState(values));
     }
 }
 
@@ -223,7 +223,7 @@ const getFieldState = (name: string, $state: FormState) => {
     return obj[lastSegment] || null;
 }
 
-export function createForm<Data>({ initialValues, validationSchema, css: cssConfig, validateOnChange, validateOnBlur }: FormConfigInput<Data>) {
+export function createForm<Data>({ values: initialValues, validationSchema, css: cssConfig, validateOnChange, validateOnBlur }: FormConfigInput<Data>) {
     const values = writable<Data>(initialValues);
     const state = writable<FormState>({});
     const isValid = writable<boolean>(false);
@@ -242,7 +242,7 @@ export function createForm<Data>({ initialValues, validationSchema, css: cssConf
     const cssValidator = writable<number>(0);
     const validationReset = writable<number>(0);
 
-    createState(initialValues, state, validationSchema);
+    createState(values, state, validationSchema);
 
     const updateForm = async () => {
         updateState(values, validationSchema, state);

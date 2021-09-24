@@ -3,7 +3,7 @@
 	import * as yup from 'yup';
 
 	const { values, formControl, isValid } = createForm({
-		initialValues: {
+		values: {
 			email: '',
 			password: ''
 		},
