@@ -290,8 +290,6 @@ export function createForm<Data>({ values: initialValues, validationSchema, css:
             },
             ...options
         }
-        console.log(options);
-
         const changeListener = (event: Event) => {
             if (validateOnChange) {
                 handleChange(event);
