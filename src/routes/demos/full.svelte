@@ -25,10 +25,10 @@
 		isValid, // Svelte Store<boolean> containing entire Form's validation status
 		isTouched, // Svelte Store<boolean> containing entire Form's touched status
 		validateForm, // Function(highlight: 'none' | 'errors' | 'all' = 'none') for manually validting entire form
-		handleChange, // Function(event: Event) to manually updating individual form control's state - can be used in place of "formControl" Action
+		handleChange, // Function(event: Event) to manually updating individual form control's state - can be used in place of "highlight" Action
 		setTouched, // Function() for manually setting Form state as "touched"
 		updateForm, // Function() for updating Form's Structure after Form Controls are Added or Removed in cases like Form Arrays
-		formControl, // Svelte Action to be used with <input>, <select>, <textarea> or similar HTML input elements
+		highlight, // Svelte Action to be used with <input>, <select>, <textarea> or similar HTML input elements
 		resetForm // Reset the Form with optional new value and clear validation
 	} = createForm<FormData>({
 		// Initial Values of Form
@@ -114,7 +114,7 @@
 			placeholder="Title"
 			name="title"
 			bind:value={$values.title}
-			use:formControl
+			use:highlight={{ useValid: false }}
 			class="form-control"
 		/>
 		{#if $state.title._errors?.length}
@@ -129,7 +129,6 @@
 			placeholder="Description"
 			name="description"
 			bind:value={$values.description}
-			use:formControl
 			class="form-control"
 		/>
 		{#if $state.description._errors?.length}
@@ -144,7 +143,7 @@
 			name="coverImage"
 			accept="image/*"
 			bind:files={$values.coverImage}
-			use:formControl
+			use:highlight
 			type="file"
 			class="form-control"
 		/>
@@ -172,7 +171,7 @@
 				placeholder="name"
 				name="users[{index}].name"
 				bind:value={user.name}
-				use:formControl
+				use:highlight
 				class="form-control"
 			/>
 			{#if $state.users[index].name._errors?.length}
@@ -186,7 +185,7 @@
 				placeholder="email"
 				name="users[{index}].email"
 				bind:value={user.email}
-				use:formControl
+				use:highlight
 				class="form-control"
 			/>
 			{#if $state.users[index].email._errors?.length}
@@ -197,7 +196,7 @@
 		</div>
 
 		<!-- Using with Components -->
-		<UserAddressForm {values} {state} {formControl} {index} />
+		<UserAddressForm {values} {state} {highlight} {index} />
 	{/each}
 
 	<div>
@@ -210,14 +209,6 @@
 </form>
 
 <style>
-	.valid {
-		border: 1px solid green;
-	}
-
-	.invalid {
-		border: 1px solid red;
-	}
-
 	.error {
 		color: red;
 	}

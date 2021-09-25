@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let values: any;
 	export let state: any;
-	export let formControl;
+	export let highlight;
 	export let index: number;
 </script>
 
@@ -13,7 +13,7 @@
 				placeholder="State"
 				bind:value={$values.users[index].address.state}
 				name="users[{index}].address.state"
-				use:formControl
+				use:highlight
 				class="form-control"
 			/>
 			{#if $state.users[index].address.state._errors?.length}
@@ -31,7 +31,7 @@
 				placeholder="City"
 				bind:value={$values.users[index].address.city}
 				name="users[{index}].address.city"
-				use:formControl
+				use:highlight
 				class="form-control"
 			/>
 			{#if $state.users[index].address.city._errors?.length}

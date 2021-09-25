@@ -9,17 +9,17 @@ type FormState = {
         [key: string]: any,
     }
 };
-
+type CSSConfig = {
+    enabled?: boolean,
+    validClass?: string,
+    invalidClass?: string,
+    useValid?: boolean,
+    useInvalid?: boolean,
+};
 type FormConfigInput<Data = any> = {
     values: Data,
     validationSchema?: ObjectSchema<any>,
-    css?: {
-        enabled?: boolean,
-        validClass?: string,
-        invalidClass?: string,
-        useValid?: boolean,
-        useInvalid?: boolean,
-    }
+    css?: CSSConfig,
     validateOnChange?: boolean,
     validateOnBlur?: boolean,
 };
@@ -279,17 +279,33 @@ export function createForm<Data>({ values: initialValues, validationSchema, css:
         isTouched.set(state);
     }
 
-    const formControl = (node: HTMLElement & { name: string }, options: any = {}) => {
+    const highlight = (node: HTMLElement & { name: string }, options: CSSConfig = {}) => {
+        options = {
+            ...{
+                enabled: true,
+                validClass: 'is-valid',
+                invalidClass: 'is-invalid',
+                useValid: true,
+                useInvalid: true,
+            },
+            ...options
+        }
+        console.log(options);
+
         const changeListener = (event: Event) => {
             if (validateOnChange) {
                 handleChange(event);
-                css.enabled && checkValidity(get(state));
+                if ('enabled' in options ? options.enabled : css.enabled) {
+                    checkValidity(get(state));
+                }
             }
         }
         const blurListener = (event: Event) => {
             if (validateOnBlur) {
                 handleChange(event);
-                css.enabled && checkValidity(get(state));
+                if ('enabled' in options ? options.enabled : css.enabled) {
+                    checkValidity(get(state));
+                }
             }
         }
         let unsubscribeState: Unsubscriber = null;
@@ -301,31 +317,34 @@ export function createForm<Data>({ values: initialValues, validationSchema, css:
                 const fieldState = getFieldState(node.name, $state);
                 const invalid = fieldState?._touched && !!fieldState?._errors?.length;
                 const valid = fieldState?._touched && !fieldState?._errors?.length;
-                node.classList.remove(css.validClass);
-                node.classList.remove(css.invalidClass);
                 if (invalid) {
-                    css.useInvalid && node.classList.add(css.invalidClass);
+                    node.classList.remove(options.validClass || css.validClass);
+                    if ('useInvalid' in options ? options.useInvalid : css.useInvalid) {
+                        node.classList.add(options.invalidClass || css.invalidClass);
+                    }
                 } else if (valid) {
-                    css.useValid && node.classList.add(css.validClass);
+                    node.classList.remove(options.invalidClass || css.invalidClass);
+                    if ('useValid' in options ? options.useValid : css.useValid) {
+                        node.classList.add(options.validClass || css.validClass);
+                    }
                 }
             }
         }
 
-        if (['input', 'checkbox', 'radio', 'select', 'textarea'].includes(node.tagName)
+        if (['input', 'select', 'textarea'].includes(node.tagName)
             || node.contentEditable) {
             node.addEventListener('change', changeListener);
             node.addEventListener('blur', blurListener);
 
             if (node.name) {
                 unsubscribeState = state.subscribe($state => {
-                    css.enabled && validateOnChange && checkValidity($state);
+                    ('enabled' in options ? options.enabled : css.enabled) && validateOnChange && checkValidity($state);
                 });
                 unsubscribeCssValidator = cssValidator.subscribe(() => {
                     checkValidity(get(state));
                 });
                 unsubscribeValidationReset = validationReset.subscribe(() => {
-                    node.classList.remove(css.validClass);
-                    node.classList.remove(css.invalidClass);
+                    node.classList.remove(options.validClass || css.validClass, options.invalidClass || css.invalidClass);
                 })
             }
         }
@@ -349,7 +368,7 @@ export function createForm<Data>({ values: initialValues, validationSchema, css:
         handleChange,
         updateForm,
         setTouched,
-        formControl,
+        highlight,
         resetForm
     };
 }

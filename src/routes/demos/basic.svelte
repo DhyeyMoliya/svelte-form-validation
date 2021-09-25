@@ -2,7 +2,7 @@
 	import { createForm } from '$lib';
 	import * as yup from 'yup';
 
-	const { values, formControl, isValid } = createForm({
+	const { values, highlight, isValid } = createForm({
 		values: {
 			email: '',
 			password: ''
@@ -25,7 +25,7 @@
 			name="email"
 			placeholder="Email"
 			bind:value={$values.email}
-			use:formControl
+			use:highlight
 			class="form-control"
 		/>
 	</div>
@@ -35,7 +35,7 @@
 			name="password"
 			placeholder="Password"
 			bind:value={$values.password}
-			use:formControl
+			use:highlight
 			class="form-control"
 		/>
 	</div>

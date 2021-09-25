@@ -24,7 +24,7 @@ _[src/routes/basic.svelte](https://github.com/DhyeyMoliya/svelte-form-validation
 	import * as yup from 'yup';
 
 	// Create Form Instance
-	const { values, formControl, isValid } = createForm({
+	const { values, highlight, isValid } = createForm({
 		// Initial Form Data
 		values: {
 			email: '',
@@ -44,8 +44,8 @@ _[src/routes/basic.svelte](https://github.com/DhyeyMoliya/svelte-form-validation
 </script>
 
 <form on:submit|preventDefault="{onSubmit}">
-	<input type="text" name="email" bind:value="{$values.email}" use:formControl />
-	<input type="password" name="password" bind:value="{$values.password}" use:formControl />
+	<input type="text" name="email" bind:value="{$values.email}" use:highlight />
+	<input type="password" name="password" bind:value="{$values.password}" use:highlight />
 
 	<button type="submit" disabled="{!$isValid}">Submit</button>
 </form>
@@ -83,10 +83,10 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
     isValid, // Svelte Store<boolean> containing entire Form's validation status
     isTouched, // Svelte Store<boolean> containing entire Form's touched status
     validateForm, // Function(highlight: 'none' | 'errors' | 'all' = 'none') for manually validting entire form
-    handleChange, // Function(event: Event) to manually updating individual form control's state - can be used in place of "formControl" Action
+    handleChange, // Function(event: Event) to manually updating individual form control's state - can be used in place of "highlight" Action
     setTouched, // Function() for manually setting Form state as "touched"
     updateForm, // Function() for updating Form's Structure after Form Controls are Added or Removed in cases like Form Arrays
-    formControl, // Svelte Action to be used with <input>, <select>, <textarea> or similar HTML input elements
+    highlight, // Svelte Action to be used with <input>, <select>, <textarea> or similar HTML input elements
     resetForm, // Reset the Form with optional new value and clear validation
   } = createForm<FormData>({
     // Initial Values of Form
@@ -112,7 +112,7 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
         }),
       )
     }),
-    // CSS class validations
+    // CSS class validations, these options are also available in "highlight" action
     css: {
       enabled: true, // use CSS classes or not
       validClass: "is-valid", // CSS class added to valid form controls
@@ -169,7 +169,7 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
         placeholder="Title"
         name="title"
         bind:value={$values.title}
-        use:formControl
+        use:highlight={{ useValid: false }}
     />
     {#if $state.title._errors?.length}
         {#each $state.title._errors as error}
@@ -181,7 +181,6 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
         placeholder="Description"
         name="description"
         bind:value={$values.description}
-        use:formControl
     />
     {#if $state.description._errors?.length}
         {#each $state.description._errors as error}
@@ -193,7 +192,7 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
         name="coverImage"
         accept="image/*"
         bind:files={$values.coverImage}
-        use:formControl
+        use:highlight
         type="file"
     />
     {#if $state.coverImage._errors?.length}
@@ -223,7 +222,7 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
             placeholder="name"
             name="users[{index}].name"
             bind:value={user.name}
-            use:formControl
+            use:highlight
         />
         {#if $state.users[index].name._errors?.length}
             {#each $state.users[index].name._errors as error}
@@ -235,7 +234,7 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
             placeholder="email"
             name="users[{index}].email"
             bind:value={user.email}
-            use:formControl
+            use:highlight
         />
         {#if $state.users[index].email._errors?.length}
             {#each $state.users[index].email._errors as error}
@@ -244,7 +243,7 @@ _[demo/Full.svelte](https://github.com/DhyeyMoliya/svelte-form-validation/blob/m
         {/if}
 
         <!-- Using with Components -->
-        <UserAddressForm {values} {state} {formControl} {index} />
+        <UserAddressForm {values} {state} {highlight} {index} />
 
     {/each}
 
@@ -283,7 +282,7 @@ _[demo/UserAddressForm.svelte](https://github.com/DhyeyMoliya/svelte-form-valida
 <script lang="ts">
 	export let values: any;
 	export let state: any;
-	export let formControl;
+	export let highlight;
 	export let index: number;
 </script>
 
@@ -293,7 +292,7 @@ _[demo/UserAddressForm.svelte](https://github.com/DhyeyMoliya/svelte-form-valida
 		placeholder="State"
 		bind:value="{$values.users[index].address.state}"
 		name="users[{index}].address.state"
-		use:formControl
+		use:highlight
 	/>
 	{#if $state.users[index].address.state._errors?.length}
 	<div>
@@ -308,7 +307,7 @@ _[demo/UserAddressForm.svelte](https://github.com/DhyeyMoliya/svelte-form-valida
 		placeholder="City"
 		bind:value="{$values.users[index].address.city}"
 		name="users[{index}].address.city"
-		use:formControl
+		use:highlight
 	/>
 	{#if $state.users[index].address.city._errors?.length}
 	<div>
