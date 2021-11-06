@@ -281,19 +281,13 @@ export function createForm<Data>({ values: initialValues, validationSchema, css:
 
     const highlight = (node: HTMLElement & { name: string }, options: CSSConfig = {}) => {
         options = {
-            ...{
-                enabled: true,
-                validClass: 'is-valid',
-                invalidClass: 'is-invalid',
-                useValid: true,
-                useInvalid: true,
-            },
+            ...css,
             ...options
         }
         const changeListener = (event: Event) => {
             if (validateOnChange) {
                 handleChange(event);
-                if ('enabled' in options ? options.enabled : css.enabled) {
+                if (options.enabled) {
                     checkValidity(get(state));
                 }
             }
@@ -301,7 +295,7 @@ export function createForm<Data>({ values: initialValues, validationSchema, css:
         const blurListener = (event: Event) => {
             if (validateOnBlur) {
                 handleChange(event);
-                if ('enabled' in options ? options.enabled : css.enabled) {
+                if (options.enabled) {
                     checkValidity(get(state));
                 }
             }
@@ -316,14 +310,14 @@ export function createForm<Data>({ values: initialValues, validationSchema, css:
                 const invalid = fieldState?._touched && !!fieldState?._errors?.length;
                 const valid = fieldState?._touched && !fieldState?._errors?.length;
                 if (invalid) {
-                    node.classList.remove(options.validClass || css.validClass);
-                    if ('useInvalid' in options ? options.useInvalid : css.useInvalid) {
-                        node.classList.add(options.invalidClass || css.invalidClass);
+                    node.classList.remove(options.validClass);
+                    if (options.useInvalid) {
+                        node.classList.add(options.invalidClass);
                     }
                 } else if (valid) {
-                    node.classList.remove(options.invalidClass || css.invalidClass);
-                    if ('useValid' in options ? options.useValid : css.useValid) {
-                        node.classList.add(options.validClass || css.validClass);
+                    node.classList.remove(options.invalidClass);
+                    if (options.useValid) {
+                        node.classList.add(options.validClass);
                     }
                 }
             }
@@ -336,13 +330,13 @@ export function createForm<Data>({ values: initialValues, validationSchema, css:
 
             if (node.name) {
                 unsubscribeState = state.subscribe($state => {
-                    ('enabled' in options ? options.enabled : css.enabled) && validateOnChange && checkValidity($state);
+                    (options.enabled) && validateOnChange && checkValidity($state);
                 });
                 unsubscribeCssValidator = cssValidator.subscribe(() => {
                     checkValidity(get(state));
                 });
                 unsubscribeValidationReset = validationReset.subscribe(() => {
-                    node.classList.remove(options.validClass || css.validClass, options.invalidClass || css.invalidClass);
+                    node.classList.remove(options.validClass, options.invalidClass);
                 })
             }
         }
