@@ -1,6 +1,6 @@
 {
     "name": "svelte-form-validation",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "main": "index.js",
     "types": "index.d.ts",
     "svelte": "index.js",
@@ -35,14 +35,14 @@
         "@sveltejs/kit": "next",
         "prettier": "^2.4.1",
         "prettier-plugin-svelte": "^2.4.0",
-        "svelte": "^3.42.6",
-        "svelte-check": "^2.2.6",
-        "svelte-preprocess": "^4.9.4",
-        "svelte2tsx": "^0.4.6",
+        "svelte": "^3.44.1",
+        "svelte-check": "^2.2.8",
+        "svelte-preprocess": "^4.9.8",
+        "svelte2tsx": "^0.4.8",
         "tslib": "^2.3.1",
-        "typescript": "^4.4.3"
+        "typescript": "^4.4.4"
     },
     "dependencies": {
-        "yup": "^0.32.9"
+        "yup": "^0.32.11"
     }
 }
